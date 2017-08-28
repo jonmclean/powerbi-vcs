@@ -17,6 +17,7 @@ import converters
 CONVERTERS = {
     'DataModelSchema': converters.JSONConverter('utf-16-le'),
     'DiagramState': converters.JSONConverter('utf-16-le'),
+    'Report/CustomVisuals': converters.NoopConverter(),
     'Report/Layout': converters.JSONConverter('utf-16-le'),
     'Report/LinguisticSchema': converters.XMLConverter('utf-16-le', False),
     '[Content_Types].xml': converters.XMLConverter('utf-8-sig', True),
@@ -54,6 +55,8 @@ def extract_pbit(pbit_path, extracted_path):
             conv = CONVERTERS.get(name, None)
             if conv is None:
                 starters = [i for i in CONVERTERS.keys() if name.startswith(i)]
+                if len(starters) == 0:
+                    raise ValueError("No converter for " + name)
                 if len(starters) != 1:
                     raise ValueError("TODO")
                 conv = CONVERTERS[starters[0]]
@@ -79,6 +82,8 @@ def compress_pbit(compressed_dir):
             conv = CONVERTERS.get(name, None)
             if conv is None:
                 starters = [i for i in CONVERTERS.keys() if name.startswith(i)]
+                if len(starters) == 0:
+                    raise ValueError("No converter for " + name)
                 if len(starters) != 1:
                     raise ValueError("TODO")
                 conv = CONVERTERS[starters[0]]
